@@ -13,11 +13,11 @@
   (compojure/GET "/" []
     {:body index})
   (compojure/GET "/png/:in" [in]
-    (println in)
-    (let [res (c/graph-bytes (read-string in))]
-      {:status 200
-       :headers {"Content-Type" "image/png"}
-       :body (ByteArrayInputStream. res)})))
+    (binding [*read-eval* false]
+      (let [res (c/graph-bytes (read-string in))]
+        {:status 200
+         :headers {"Content-Type" "image/png"}
+         :body (ByteArrayInputStream. res)}))))
 
 (defn -main
   [& args]
