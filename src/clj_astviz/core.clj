@@ -23,17 +23,23 @@
             ast))))
   Object
     (to-graph [ast parent-id]
-      (let [nid (str (gensym))]
-          [[nid {:label (str (type ast) ":  " ast)}]
-           [parent-id nid]])))
+      (let [nid (str (gensym))
+            node [nid {:label (str (type ast) ":  " ast)}]]
+        (if (= parent-id ::empty)
+          [node]
+          [node [parent-id nid]]))))
 
 (defn ast-to-dot
   [ast]
   (gv/dot
     (gv/digraph
-      (filter #(not (= % ::empty))
-        (sort-by #(not (map? (second %)))
-          (into #{} (to-graph ast ::empty)))))))
+      (into #{} (to-graph ast ::empty)))))
+
+(defn graph-bytes
+  [ast]
+  (gv/render
+    (ast-to-dot ast)
+    {:format "png" :binary? true}))
 
 (defn save-graph!
   [fname ast]

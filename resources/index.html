@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>clojure expression graphs</title>
+    </head>
+    <body>
+        <form id="inp">
+            <textarea cols="100" id="inp-txt">(for [i (range 100)] {:x i :y ["foo"]})</textarea>
+            <input type="submit" value="render">
+        </form>
+        <img id="target" src="#" style="max-width: 100%; max-height: 100%;">
+        <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+        <script>
+            $(function() {
+                $('#inp').submit(function(evt) {
+                    evt.preventDefault();
+                    $('#target').attr('src', '/png/'+escape($('#inp-txt').val()).replace(/\//g, '%2F'));
+                });
+            });
+        </script>
+    </body>
+</html>
