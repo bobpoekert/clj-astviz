@@ -2,17 +2,6 @@
   (:gen-class)
   (require [dorothy.core :as gv]))
 
-(def seqables #{(type '()) (type {}) (type [])})
-
-(defn seqable?
-  "a dirty hack; this should be implemented with a protocol instead of a conditional"
-  [v]
-  (try
-    (seq v)
-    true
-    (catch IllegalArgumentException e
-      false)))
-
 (defprotocol ToGraph
   (to-graph [this parent-id]))
 
@@ -45,12 +34,6 @@
       (filter #(not (= % ::empty))
         (sort-by #(not (map? (second %)))
           (into #{} (to-graph ast ::empty)))))))
-
-(gv/save!
-  (ast-to-dot
-    '(for [x (range 100)] {:v x}))
-  "test2.png"
-  {:format "png"})
 
 (defn save-graph!
   [fname ast]
