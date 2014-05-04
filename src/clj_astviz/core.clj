@@ -29,11 +29,23 @@
           [node]
           [node [parent-id nid]]))))
 
+(defn dedupe
+  [s]
+  (first
+    (reduce
+      (fn [[res seen] e]
+        (if (contains? seen e)
+          [res (conj seen e)]
+          [(conj res e) (conj seen e)]))
+      [[] #{}]
+      s)))
+
 (defn ast-to-dot
   [ast]
   (gv/dot
     (gv/digraph
-      (into #{} (to-graph ast ::empty)))))
+      (cons {:ordering "out"}
+        (dedupe (to-graph ast ::empty))))))
 
 (defn graph-bytes
   [ast]
